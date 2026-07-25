@@ -14,6 +14,7 @@ from homeassistant.config_entries import (
     OptionsFlow,
 )
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
+from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import ObiEnergyTrackerAPI
@@ -45,11 +46,12 @@ class ObiEnergyTrackerConfigFlow(ConfigFlow, domain=DOMAIN):
     MINOR_VERSION = 1
 
     @staticmethod
-    def async_supports_options_flow(
+    @callback
+    def async_get_options_flow(
         config_entry: ConfigEntry,
-    ) -> bool:
-        """Return options flow support for this handler."""
-        return True
+    ) -> ObiEnergyTrackerOptionsFlow:
+        """Get the options flow for this handler."""
+        return ObiEnergyTrackerOptionsFlow()
 
     async def async_step_discovery(  # pylint: disable=unused-argument
         self, discovery_info: dict[str, Any]
