@@ -49,10 +49,20 @@ async def async_setup_entry(
 
     entry.runtime_data = coordinator
 
+    # Reload the entry when options (e.g. scan interval) change
+    entry.async_on_unload(entry.add_update_listener(_async_update_listener))
+
     # Forward entry setup to platforms
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
+
+
+async def _async_update_listener(
+    hass: HomeAssistant, entry: ObiEnergyTrackerConfigEntry
+) -> None:
+    """Reload the config entry when its options change."""
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(

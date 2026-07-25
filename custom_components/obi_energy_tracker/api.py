@@ -184,7 +184,7 @@ class ObiEnergyTrackerAPI:
             return None
 
     async def async_get_meter_data(self) -> dict[str, Any] | None:
-        """Get meter reading data (Zählerstand)."""
+        """Get meter reading data (Zählerstand and Einspeisung)."""
         if not self.token or not self.bridge_id or not self.device_id:
             return None
 
@@ -204,7 +204,7 @@ class ObiEnergyTrackerAPI:
 
             params = {
                 "duration": duration_str,
-                "measures": "energy",
+                "measures": "energy,negative_energy",
             }
 
             headers = self._get_auth_headers()
@@ -213,7 +213,9 @@ class ObiEnergyTrackerAPI:
                 url, params=params, headers=headers
             ) as response:
                 if response.status == 200:
-                    return await response.json()
+                    data = await response.json()
+                    _LOGGER.debug("Raw meter data response: %s", data)
+                    return data
                 _LOGGER.error("Failed to get meter data: %d", response.status)
                 return None
         except OSError as err:

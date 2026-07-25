@@ -28,10 +28,26 @@
             }
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "title": "OBI EnergyTracker Options",
+                "data": {
+                    "scan_interval": "Polling interval (seconds)"
+                },
+                "data_description": {
+                    "scan_interval": "How often data is fetched from the OBI EnergyTracker API (minimum 30 seconds)."
+                }
+            }
+        }
+    },
     "entity": {
         "sensor": {
             "meter_reading": {
                 "name": "Meter Reading"
+            },
+            "feed_in_reading": {
+                "name": "Feed-in Reading"
             }
         }
     }

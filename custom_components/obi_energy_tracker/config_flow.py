@@ -17,7 +17,15 @@ from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 
 from .api import ObiEnergyTrackerAPI
-from .const import CONF_BRIDGE_ID, CONF_COUNTRY, CONF_DEVICE_ID, DOMAIN
+from .const import (
+    CONF_BRIDGE_ID,
+    CONF_COUNTRY,
+    CONF_DEVICE_ID,
+    CONF_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+    MIN_SCAN_INTERVAL,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,8 +99,21 @@ class ObiEnergyTrackerConfigFlow(ConfigFlow, domain=DOMAIN):
 class ObiEnergyTrackerOptionsFlow(OptionsFlow):
     """Handle options flow for Obi EnergyTracker."""
 
-    async def async_step_init(  # pylint: disable=unused-argument
+    async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Manage the options."""
-        return self.async_show_form(step_id="init")
+        if user_input is not None:
+            return self.async_create_entry(title="", data=user_input)
+
+        current_scan_interval = self.config_entry.options.get(
+            CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+        )
+        schema = vol.Schema(
+            {
+                vol.Optional(
+                    CONF_SCAN_INTERVAL, default=current_scan_interval
+                ): vol.All(vol.Coerce(int), vol.Range(min=MIN_SCAN_INTERVAL)),
+            }
+        )
+        return self.async_show_form(step_id="init", data_schema=schema)

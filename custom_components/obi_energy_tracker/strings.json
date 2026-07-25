@@ -28,10 +28,26 @@
       "default": "Successfully connected to Obi EnergyTracker"
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Obi EnergyTracker Optionen",
+        "data": {
+          "scan_interval": "Abfrageintervall (Sekunden)"
+        },
+        "data_description": {
+          "scan_interval": "Wie oft Daten von der Obi EnergyTracker API abgerufen werden (mindestens 30 Sekunden)."
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
       "meter_reading": {
         "name": "Zählerstand"
+      },
+      "feed_in_reading": {
+        "name": "Einspeisung"
       }
     }
   }
