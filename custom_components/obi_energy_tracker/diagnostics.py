@@ -2,49 +2,56 @@
 
 from __future__ import annotations
 
-import logging
 from typing import Any
 
-from aiohttp import ClientError
-
+from homeassistant.components.diagnostics import async_redact_data
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from . import ObiEnergyTrackerConfigEntry
-from .api import ObiEnergyTrackerAPI
-from .const import CONF_BRIDGE_ID, CONF_COUNTRY, CONF_DEVICE_ID
+from .const import CONF_COUNTRY, DATA_DAILY, DATA_METER, DATA_PROFILE
 
-_LOGGER = logging.getLogger(__name__)
+# Everything that identifies the account or the household.
+TO_REDACT = {
+    "email",
+    "password",
+    "ecomId",
+    "ecom_id",
+    "givenName",
+    "wifiSSID",
+    "id",
+    "bridge_id",
+    "device_id",
+    "btChallengeId",
+    "label",
+    "unique_id",
+}
 
 
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, config_entry: ObiEnergyTrackerConfigEntry
 ) -> dict[str, Any]:
-    """Return diagnostics for a config entry."""
-    # Create API client to test connection
-    session = async_get_clientsession(hass)
-    api = ObiEnergyTrackerAPI(
-        session=session,
-        email=config_entry.data.get("email", ""),
-        password=config_entry.data.get("password", ""),
-        country=config_entry.data.get(CONF_COUNTRY, "DE"),
-        bridge_id=config_entry.data.get(CONF_BRIDGE_ID),
-        device_id=config_entry.data.get(CONF_DEVICE_ID),
-    )
+    """Return diagnostics for a config entry.
 
-    api_available = False
-    try:
-        api_available = await api.async_login()
-    except (OSError, ClientError) as err:
-        _LOGGER.debug("Diagnostics login failed: %s", err)
-        api_available = False
+    Uses the data the coordinator already holds instead of performing a fresh
+    login, so downloading diagnostics never costs an extra authentication round
+    trip and reflects exactly what the entities are seeing.
+    """
+    coordinator = config_entry.runtime_data
+    data = coordinator.data or {}
 
-    return {
-        "config_entry_data": {
-            "email": config_entry.data.get("email", ""),
-            "country": config_entry.data.get(CONF_COUNTRY, "DE"),
-            "bridge_id": config_entry.data.get(CONF_BRIDGE_ID),
-            "device_id": config_entry.data.get(CONF_DEVICE_ID),
+    return async_redact_data(
+        {
+            "config_entry_data": {
+                **config_entry.data,
+                "country": config_entry.data.get(CONF_COUNTRY),
+            },
+            "options": dict(config_entry.options),
+            "last_update_success": coordinator.last_update_success,
+            "profile": data.get(DATA_PROFILE),
+            "meter_record_count": len(data.get(DATA_METER) or []),
+            "meter_latest": (data.get(DATA_METER) or [])[-2:],
+            "daily_record_count": len(data.get(DATA_DAILY) or []),
+            "daily_latest": (data.get(DATA_DAILY) or [])[-4:],
         },
-        "api_available": api_available,
-    }
+        TO_REDACT,
+    )

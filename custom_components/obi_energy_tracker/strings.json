@@ -1,55 +1,82 @@
 {
   "config": {
-    "step": {
-      "user": {
-        "title": "Connect to Obi EnergyTracker",
-        "description": "Enter your Obi account credentials",
-        "data": {
-          "email": "Email address",
-          "password": "Password",
-          "country": "Country code"
-        },
-        "data_description": {
-          "email": "Your Obi account email",
-          "password": "Your Obi account password",
-          "country": "The country where your account is registered (e.g., DE)"
-        }
-      }
-    },
-    "error": {
-      "invalid_auth": "Invalid email or password",
-      "connection_error": "Failed to connect to Obi EnergyTracker service",
-      "no_devices": "No Obi EnergyTracker devices found in your account"
-    },
     "abort": {
-      "already_configured": "Account is already configured"
+      "already_configured": "Account is already configured",
+      "reauth_successful": "Re-authentication was successful"
     },
     "create_entry": {
-      "default": "Successfully connected to Obi EnergyTracker"
+      "default": "Successfully connected to OBI EnergyTracker to your home assistant instance"
+    },
+    "error": {
+      "connection_error": "Failed to connect to OBI backend service",
+      "invalid_auth": "Invalid email or password",
+      "no_devices": "No OBI EnergyTracker devices found in your account"
+    },
+    "step": {
+      "user": {
+        "data": {
+          "country": "Country code",
+          "email": "Email address",
+          "password": "Password"
+        },
+        "data_description": {
+          "country": "The country where your account is registered (e.g., DE)",
+          "email": "Your OBI account email",
+          "password": "Your OBI account password"
+        },
+        "description": "Enter your OBI account credentials",
+        "title": "Connect to (hey)OBI"
+      },
+      "reauth_confirm": {
+        "data": {
+          "password": "Password"
+        },
+        "data_description": {
+          "password": "The current password of your OBI account"
+        },
+        "description": "OBI rejected the stored credentials for {email}. Please enter the password again.",
+        "title": "Re-authenticate with (hey)OBI"
+      }
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Obi EnergyTracker Optionen",
+        "title": "OBI EnergyTracker Options",
         "data": {
-          "scan_interval": "Abfrageintervall (Sekunden)"
+          "scan_interval": "Polling interval (seconds)"
         },
         "data_description": {
-          "scan_interval": "Wie oft Daten von der Obi EnergyTracker API abgerufen werden (mindestens 30 Sekunden)."
+          "scan_interval": "How often data is fetched from the OBI EnergyTracker API (minimum 30 seconds). The bridge only uploads a new reading every 5 minutes, so shorter intervals return the same value."
         }
       }
     }
   },
   "entity": {
+    "binary_sensor": {
+      "online": {
+        "name": "Online"
+      }
+    },
     "sensor": {
       "meter_reading": {
-        "name": "Zählerstand"
+        "name": "Meter Reading"
       },
       "feed_in_reading": {
-        "name": "Einspeisung"
+        "name": "Feed-in Reading"
+      },
+      "battery": {
+        "name": "Battery"
+      },
+      "connection_strength": {
+        "name": "Connection quality"
+      },
+      "last_record": {
+        "name": "Last reading received"
+      },
+      "ota_status": {
+        "name": "Firmware update status"
       }
     }
   }
 }
-

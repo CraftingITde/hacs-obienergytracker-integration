@@ -1,7 +1,8 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Account is already configured"
+            "already_configured": "Account is already configured",
+            "reauth_successful": "Re-authentication was successful"
         },
         "create_entry": {
             "default": "Successfully connected to OBI EnergyTracker to your home assistant instance"
@@ -25,6 +26,16 @@
                 },
                 "description": "Enter your OBI account credentials",
                 "title": "Connect to (hey)OBI"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Password"
+                },
+                "data_description": {
+                    "password": "The current password of your OBI account"
+                },
+                "description": "OBI rejected the stored credentials for {email}. Please enter the password again.",
+                "title": "Re-authenticate with (hey)OBI"
             }
         }
     },
@@ -36,18 +47,35 @@
                     "scan_interval": "Polling interval (seconds)"
                 },
                 "data_description": {
-                    "scan_interval": "How often data is fetched from the OBI EnergyTracker API (minimum 30 seconds)."
+                    "scan_interval": "How often data is fetched from the OBI EnergyTracker API (minimum 30 seconds). The bridge only uploads a new reading every 5 minutes, so shorter intervals return the same value."
                 }
             }
         }
     },
     "entity": {
+        "binary_sensor": {
+            "online": {
+                "name": "Online"
+            }
+        },
         "sensor": {
             "meter_reading": {
                 "name": "Meter Reading"
             },
             "feed_in_reading": {
                 "name": "Feed-in Reading"
+            },
+            "battery": {
+                "name": "Battery"
+            },
+            "connection_strength": {
+                "name": "Connection quality"
+            },
+            "last_record": {
+                "name": "Last reading received"
+            },
+            "ota_status": {
+                "name": "Firmware update status"
             }
         }
     }

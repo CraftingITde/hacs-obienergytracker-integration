@@ -1,17 +1,20 @@
 {
   "domain": "obi_energy_tracker",
-  "name": "OBI Energy Tracker",
+  "name": "OBI Energy Tracker (CI)",
+  "after_dependencies": [
+    "recorder"
+  ],
   "codeowners": [
-    "@mla157"
+    "@CraftingITde"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/mla157/hacs-obienergytracker-integration",
+  "documentation": "https://github.com/CraftingITde/hacs-obienergytracker-integration",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/mla157/hacs-obienergytracker-integration/issues",
+  "issue_tracker": "https://github.com/CraftingITde/hacs-obienergytracker-integration/issues",
   "quality_scale": "bronze",
   "requirements": [
     "pyjwt==2.12.1"
   ],
-  "version": "0.0.0.2"
+  "version": "0.0.0.3"
 }

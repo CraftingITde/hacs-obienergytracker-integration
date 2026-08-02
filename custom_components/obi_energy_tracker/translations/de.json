@@ -1,0 +1,82 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Das Konto ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Anmeldung war erfolgreich"
+        },
+        "create_entry": {
+            "default": "OBI EnergyTracker wurde erfolgreich mit deiner Home Assistant Instanz verbunden"
+        },
+        "error": {
+            "connection_error": "Verbindung zum OBI Backend-Dienst fehlgeschlagen",
+            "invalid_auth": "Ungültige E-Mail-Adresse oder ungültiges Passwort",
+            "no_devices": "In deinem Konto wurden keine OBI EnergyTracker Geräte gefunden"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "country": "Ländercode",
+                    "email": "E-Mail-Adresse",
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "country": "Das Land, in dem dein Konto registriert ist (z. B. DE)",
+                    "email": "Die E-Mail-Adresse deines OBI Kontos",
+                    "password": "Das Passwort deines OBI Kontos"
+                },
+                "description": "Gib die Zugangsdaten deines OBI Kontos ein",
+                "title": "Mit (hey)OBI verbinden"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "password": "Das aktuelle Passwort deines OBI Kontos"
+                },
+                "description": "OBI hat die gespeicherten Zugangsdaten für {email} abgelehnt. Bitte gib das Passwort erneut ein.",
+                "title": "Erneut bei (hey)OBI anmelden"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "OBI EnergyTracker Optionen",
+                "data": {
+                    "scan_interval": "Abfrageintervall (Sekunden)"
+                },
+                "data_description": {
+                    "scan_interval": "Wie oft Daten von der OBI EnergyTracker API abgerufen werden (mindestens 30 Sekunden). Die Bridge liefert nur alle 5 Minuten einen neuen Messwert, kürzere Intervalle liefern denselben Wert."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "online": {
+                "name": "Online"
+            }
+        },
+        "sensor": {
+            "meter_reading": {
+                "name": "Zählerstand"
+            },
+            "feed_in_reading": {
+                "name": "Einspeisung"
+            },
+            "battery": {
+                "name": "Batterie"
+            },
+            "connection_strength": {
+                "name": "Verbindungsqualität"
+            },
+            "last_record": {
+                "name": "Letzter Messwert empfangen"
+            },
+            "ota_status": {
+                "name": "Firmware-Update-Status"
+            }
+        }
+    }
+}
